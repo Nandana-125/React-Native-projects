@@ -1,166 +1,154 @@
-// App.js
-
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
-const App = () => {
-  const [userName, setUserName] = useState('');
-  const [showModal, setShowModal] = useState(true);
-  const [todos, setTodos] = useState([]);
-  const [newTodoText, setNewTodoText] = useState('');
+export default function App() {
+  const [input, setInput] = useState('');
+  const [result, setResult] = useState('');
 
-  const handleContinue = () => {
-    if (userName.trim() !== '') {
-      setShowModal(false);
+  const handleInput = (value) => {
+    setInput(input + value);
+  };
+
+  const handleClear = () => {
+    setInput('');
+    setResult('');
+  };
+
+  const handleBackspace = () => {
+    setInput(input.slice(0, -1));
+  };
+
+  const handleCalculate = () => {
+    try {
+      setResult(eval(input));
+    } catch (error) {
+      setResult('Error');
     }
-  };
-
-  const handleAddTodo = () => {
-    if (newTodoText.trim() !== '') {
-      setTodos([...todos, { text: newTodoText, done: false }]);
-      setNewTodoText('');
-    }
-  };
-
-  const handleRemoveTodo = (index) => {
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
-  };
-
-  const handleToggleDone = (index) => {
-    const newTodos = [...todos];
-    newTodos[index].done = !newTodos[index].done;
-    setTodos(newTodos);
   };
 
   return (
     <View style={styles.container}>
-      <Modal visible={showModal} transparent={true} animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Enter Your Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your name"
-              value={userName}
-              onChangeText={(value) => setUserName(value)}
-            />
-            <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-              <Text style={styles.buttonText}>Continue</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-      <Text style={styles.userName}>Welcome, {userName}</Text>
-      <Text style={styles.heading}>Today's Tasks</Text>
-      <View style={styles.todoInputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter todo"
-          value={newTodoText}
-          onChangeText={(value) => setNewTodoText(value)}
-        />
-        <TouchableOpacity style={[styles.addButton, { backgroundColor: 'purple' }]} onPress={handleAddTodo}>
-          <Text style={[styles.buttonText, { color: 'white' }]}>Add Todo</Text>
+      <Text style={styles.title}>Simple Calculator</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="0"
+        keyboardType="numeric"
+        value={input}
+        onChangeText={(text) => setInput(text)}
+      />
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('1')}>
+          <Text style={styles.buttonText}>1</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('2')}>
+          <Text style={styles.buttonText}>2</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('3')}>
+          <Text style={styles.buttonText}>3</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('+')}>
+          <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={todos}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.todoItem}>
-            <Text style={styles.todoText}>{item.text}</Text>
-            <TouchableOpacity onPress={() => handleRemoveTodo(index)}>
-              <MaterialIcons name="delete" size={24} color="red" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleToggleDone(index)}>
-              <MaterialIcons name={item.done ? "check-circle" : "check-circle-outline"} size={24} color={item.done ? "green" : "gray"} />
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('4')}>
+          <Text style={styles.buttonText}>4</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('5')}>
+          <Text style={styles.buttonText}>5</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('6')}>
+          <Text style={styles.buttonText}>6</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('-')}>
+          <Text style={styles.buttonText}>-</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('7')}>
+          <Text style={styles.buttonText}>7</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('8')}>
+          <Text style={styles.buttonText}>8</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('9')}>
+          <Text style={styles.buttonText}>9</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('*')}>
+          <Text style={styles.buttonText}>*</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('0')}>
+          <Text style={styles.buttonText}>0</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleClear()}>
+          <Text style={styles.buttonText}>C</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleBackspace()}>
+          <Text style={styles.buttonText}>←</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleInput('/')}>
+          <Text style={styles.buttonText}>/</Text>
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity style={styles.calculateButton} onPress={() => handleCalculate()}>
+        <Text style={styles.calculateButtonText}>=</Text>
+      </TouchableOpacity>
+      <Text style={styles.result}>Result: {result}</Text>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
-  },
-  modalContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
     backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
   },
-  modalTitle: {
+  title: {
     fontSize: 24,
+    fontWeight: 'bold',
     marginBottom: 20,
   },
-  userName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
   input: {
-    width: '100%',
+    width: '80%',
     height: 40,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
+    marginBottom: 10,
     paddingHorizontal: 10,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
     marginBottom: 10,
   },
-  continueButton: {
-    backgroundColor: 'lightgreen',
-    paddingHorizontal: 20,
+  button: {
+    backgroundColor: '#007bff',
     paddingVertical: 10,
-    borderRadius: 5,
-  },
-  addButton: {
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    marginHorizontal: 5,
     borderRadius: 5,
-    marginBottom: 10,
-    alignItems: 'center',
   },
   buttonText: {
-    fontWeight: 'bold',
+    color: '#fff',
+    fontSize: 18,
   },
-  todoInputContainer: {
-    marginBottom: 20,
-  },
-  todoItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
+  calculateButton: {
+    backgroundColor: '#28a745',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginVertical: 10,
     borderRadius: 5,
   },
-  todoText: {
-    flex: 1,
-    marginRight: 10,
+  calculateButtonText: {
+    color: '#fff',
+    fontSize: 18,
+  },
+  result: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
-
-export default App;
